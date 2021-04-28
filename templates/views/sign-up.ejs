@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="sign-up.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#F3F3F3">
+    <meta name="msapplication-TileColor" content="#F3F3F3">
+    <meta name="theme-color" content="#F3F3F3">
+
+    <meta property="og:image" content="https://tailwindcomponents.com/storage/2335/temp66711.png?v=2021-04-14 20:16:55" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="640" />
+    <meta property="og:image:type" content="image/png" />
+
+    <title>Sign-Up</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.0.2/dist/tailwind.min.css">
+</head>
+<body class="h-screen overflow-hidden flex items-center justify-center" style="background: #F3F3F3;">
+    <body class="font-mono bg-gray-400"></body>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+
+<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.min.css')</style>
+
+
+<div class="style="background: #F3F3F3; flex items-center justify-center "></div>
+    <div class="bg-gray-100 text-gray-500 rounded-none shadow-xl w-full overflow-hidden max-w-screen-md">
+        <div class="md:flex w-full">
+            <div class="hidden md:block w-1/2 style="background: #F3F3F3;">
+                <img class="cover-full" src="/imgs/lightbulb.gif" alt="">
+            </div>
+            <div class="w-full md:w-1/2 py-10 px-5 md:px-10">
+                <div class="text-center mb-10">
+                    <h1 class="font-bold text-3xl text-gray-900">REGISTER</h1>
+                    <p>Enter your information to register</p>
+                </div>
+            <form action="/sign-up" method="POST">
+                <% if(messages.error) { %>
+                    <span class="text-red-500 text-sm pl-1"><%= messages.error %></span>
+                <% } %>
+                <div>
+                    <div class="flex -mx-3">
+                        <div class="w-1/2 px-3 mb-5">
+                            <label for="" class="text-xs font-semibold px-1">First name</label>
+                            <div class="flex">
+                                <div class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i class="mdi mdi-account-outline text-gray-400 text-lg"></i></div>
+                                <input type="text" name="firstname" value="<%= messages.firstname %>" class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-black" placeholder="Rahul">
+                            </div>
+                        </div>
+                        <div class="w-1/2 px-3 mb-5">
+                            <label for="" class="text-xs font-semibold px-1">Last name</label>
+                            <div class="flex">
+                                <div class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i class="mdi mdi-account-outline text-gray-400 text-lg"></i></div>
+                                <input type="text" name="lastname" value="<%= messages.lastname %>" class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-black" placeholder="Kumar">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex -mx-3">
+                        <div class="w-full px-3 mb-5">
+                            <label for="" class="text-xs font-semibold px-1">Email</label>
+                            <div class="flex">
+                                <div class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i class="mdi mdi-email-outline text-gray-400 text-lg"></i></div>
+                                <input type="email" name="email" value="<%= messages.email %>" class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-black" placeholder="selec.co@example.com">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex -mx-3">
+                        <div class="w-full px-3 mb-12">
+                            <label for="" class="text-xs font-semibold px-1">Password</label>
+                            <div class="flex">
+                                <div class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i class="mdi mdi-lock-outline text-gray-400 text-lg"></i></div>
+                                <input type="password" name="password" value="password" class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-black" placeholder="************">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex -mx-3">
+                        <div class="w-full px-3 mb-5">
+                            <button type="submit" value="sign-up" class="block w-full max-w-xs mx-auto bg-black  text-white rounded-lg px-3 py-3 font-semibold">REGISTER NOW</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+require('dotenv').config();
+const express = require("express");
+const path = require("path");
+const app = express();
+const hbs = require("hbs");
+const ejs = require("ejs");
+const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose')
+const session = require('express-session')
+const flash = require('express-flash')
+const MongoDbStore = require('connect-mongo')(session)
+const passport = require('passport')
+
+//database connection
+
+const url = 'mongodb://localhost/shop';
+
+mongoose.connect(url, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: true
+});
+const connection = mongoose.connection;
+connection.once('open', () => {
+    console.log('Database connected...');
+}).catch(err => {
+    console.log('Connection failed...')
+});
+
+//session store
+let mongoStore = new MongoDbStore({
+    mongooseConnection: connection,
+    collection: 'sessions'
+})
+
+//session config
+app.use(session({
+   secret: 'mysecretcookie',
+   resave: false,
+   store: mongoStore,
+   saveUninitialized: false,
+   cookie: { maxAge: 1000 * 60 * 60 * 24} // 24 hours
+}))
+
+//passport config
+const passportInit = require('./config/passport')
+passportInit(passport)
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+app.use(flash())
+
+//database required and connected
+require("./db/conn");
+const Register = require("./models/sign-ups");
+const Product = require("./models/product");
+
+app.use(express.static('public'))
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
+//controller required
+const homeController = require("./http/controllers/homeController");
+const cartController = require("./http/controllers/customers/cartController");
+const orderController = require("./http/controllers/customers/orderController");
+const productsController = require("./http/controllers/productsController");
+const authController = require("./http/controllers/authController");
+const AdminOrderController = require("./http/controllers/admin/orderController");
+
+const guest = require("../src/http/middlewares/guest")
+const auth = require("../src/http/middlewares/auth")
+
+const port = process.env.PORT || 3000;
+
+const static_path = path.join(__dirname, "../public");
+const template_path = path.join(__dirname, "../templates/views");
+const partials_path = path.join(__dirname, "../templates/partials");
+
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
+
+//global middlewares
+app.use((req, res, next) => {
+    res.locals.session = req.session
+    res.locals.user = req.user
+    next()
+})
+
+//setting template engine
+app.use(express.static(static_path));
+app.engine('html', require('ejs').renderFile);
+app.set("view engine", "ejs");
+app.set("views", template_path);
+hbs.registerPartials(partials_path);
+
+//controllers
+app.get("/", homeController().index) 
+app.get("/views/products.ejs", productsController().index)
+
+//customer routes
+app.get("/views/cart.ejs", cartController().index)
+app.post('/update-cart', cartController().update)
+app.post('/orders', auth, orderController().store)
+app.get('/views/orders.ejs', auth, orderController().index)
+
+//admin routes
+app.get('/views/admin/orders.ejs', auth, orderController().index)
+
+app.get("/views/login.ejs", guest, authController().login)
+app.post("/login", authController().postLogin)
+app.get("/views/sign-up.ejs", guest, authController().register)
+app.post("/sign-up", authController().postRegister)
+app.post('/logout', authController().logout)
+
+
+// app.post("/sign-up", async (req, res) => {
+//     try {
+        
+//         const registerUser = new Register({
+//             firstname: req.body.firstname,
+//             lastname:  req.body.lastname,
+//             email:  req.body.email,
+//             password:  req.body.password
+//         })
+
+//         const registered = await registerUser.save();
+//         res.status(201).render("index");
+
+//     } catch (error) {
+//         res.status(400).send(error);
+//     }
+// });
+
+app.post("/login", async (req, res) => {
+    try {
+        
+        const email = req.body.email;
+        const password = req.body.password;
+
+        const useremail = await Register.findOne({email:email});
+
+        const isMatch = bcrypt.compare(password, useremail.password);
+        
+        if(isMatch){
+            res.status(201).render("index");
+        }else{
+            res.send("Password are not matching");
+        }
+
+    } catch (error) {
+        res.status(400).send("Invalid Login Details");
+    }
+});
+
+app.listen(port, () => {
+    console.log(`server is running at port no ${port}`);
+})

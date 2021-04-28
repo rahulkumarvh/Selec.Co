@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Orders</title>
+    <meta name="keywords" content="tailwind,tailwindcss,tailwind css,css,starter template,free template,store template, shop layout, minimal, monochrome, minimalistic, theme, nordic">
+
+
+    <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/client.css">
+    
+
+    <style>
+
+        .card{
+            position: relative;
+            height: 22rem;
+            width: 22rem;
+            padding: 0;
+            margin: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            border-radius: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card img {
+            object-fit: cover;
+            height: 400px;
+            margin: 0;
+        }
+
+        .container .card .content{
+            position: absolute;
+            bottom: -160px;
+            width: 100%;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            flex-direction: column;
+            background-color: black;
+            box-shadow: 0 -10px 10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: bottom 0.5s;
+        }
+
+        .container .card:hover .content{
+            bottom: 0px;
+        }
+
+        .container .card .content h3{
+            color: white;
+            letter-spacing: 2px;
+            font-weight: 500;
+            font-size: 18px;
+            text-align: center;
+            margin: 20px 0 15px;
+            line-height: 1.1em;
+            transition: 0.5s;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .container .card:hover .content h3{
+            opacity: 1;
+            transform: translateY(0px);
+        }
+
+        .bt{
+            scale: 50%;
+        }
+
+        .work-sans {
+            font-family: 'Work Sans', sans-serif;
+        }
+                
+        #menu-toggle:checked + #menu {
+            display: block;
+        }
+        
+        .hover\:grow {
+            transition: all 0.3s;
+            transform: scale(1);
+        }
+        
+        .hover\:grow:hover {
+            transform: scale(1.02);
+        }
+        
+        .carousel-open:checked + .carousel-item {
+            position: static;
+            opacity: 100;
+        }
+        
+        .carousel-item {
+            -webkit-transition: opacity 0.6s ease-out;
+            transition: opacity 0.6s ease-out;
+        }
+        
+        #carousel-1:checked ~ .control-1,
+        #carousel-2:checked ~ .control-2,
+        #carousel-3:checked ~ .control-3 {
+            display: block;
+        }
+        
+        .carousel-indicators {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            bottom: 2%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        #carousel-1:checked ~ .control-1 ~ .carousel-indicators li:nth-child(1) .carousel-bullet,
+        #carousel-2:checked ~ .control-2 ~ .carousel-indicators li:nth-child(2) .carousel-bullet,
+        #carousel-3:checked ~ .control-3 ~ .carousel-indicators li:nth-child(3) .carousel-bullet {
+            color: #000;
+        }
+    </style>
+    
+</head>
+
+<body class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
+
+        <%- include('nav.ejs') %>
+
+            <section class="orders light-section container mx-auto w-2/3">
+                <div class="container mx-auto pt-12">
+                    <h1 class="font-bold text-lg mb-4 text-black">All orders</h1>
+                    <% if(messages.success) { %> 
+                        <div id="success-alert" class="flex items-center bg-green-500 text-white texxt-sm font-bold px-4 py-3" role="alert">
+                            <svg class="h-5 pr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 209.281 209.281" style="enable-background:new 0 0 209.281 209.281;" xml:space="preserve">
+                                <g>
+                                    <path d="M104.641,72.862c5.812,0,10.541-4.723,10.541-10.528c0-5.826-4.729-10.566-10.541-10.566   c-5.812,0-10.541,4.74-10.541,10.566C94.1,68.139,98.828,72.862,104.641,72.862z"/>
+                                    <path d="M123.349,142.412H112.14v-42.016c0-4.142-3.357-7.5-7.5-7.5H85.933c-4.142,0-7.5,3.358-7.5,7.5c0,4.142,3.358,7.5,7.5,7.5   h11.208v42.016c0,4.142,3.358,7.5,7.5,7.5h18.709c4.143,0,7.5-3.358,7.5-7.5C130.849,145.77,127.492,142.412,123.349,142.412z"/>
+                                    <path d="M104.641,0.001C46.941,0.001,0,46.942,0,104.64s46.941,104.64,104.641,104.64c57.699,0,104.64-46.941,104.64-104.64   S162.339,0.001,104.641,0.001z M104.641,194.28C55.212,194.28,15,154.068,15,104.64s40.212-89.64,89.641-89.64   s89.64,40.212,89.64,89.64S154.069,194.28,104.641,194.28z"/>
+                            </svg>
+                            <p>Order placed Succesfully</p>
+                        </div>
+                    <% } %> 
+                </div>
+                <table class="w-full table-auto bg-white mt-2">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left text-black">Orders</th>
+                            <th class="px-4 py-2 text-left text-black">Email</th>
+                            <th class="px-4 py-2 text-left text-black">Address</th>
+                            <th class="px-4 py-2 text-left text-black">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(orders.length) { %>
+                            <% orders.forEach((order) => { %>
+                                <tr>
+                                    <td class="border px-4 py-2">
+                                        <a class="link" href="/"><%= order._id %></a>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <%= order.email %>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <%= order.address %>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <%= moment(order.createdAt).format('hh:mm A') %>
+                                    </td>
+                                </tr>
+                           <% }) %> 
+                        <% } else { %>
+                        <tr>
+                            <td class="p-4">
+                                <span>No orders found!</span>
+                            </td>
+                        </tr>
+                        <% } %> 
+                    </tbody>
+                </table>
+            </section>
+
+    <script src="/js/client.js"></script>
+
+</body>
+
+</html>
