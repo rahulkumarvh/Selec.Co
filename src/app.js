@@ -10,6 +10,7 @@ const session = require('express-session')
 const flash = require('express-flash')
 const MongoDbStore = require('connect-mongo')(session)
 const passport = require('passport')
+const methodOverride = require('method-override')
 
 //database connection
 
@@ -49,6 +50,9 @@ passportInit(passport)
 app.use(passport.initialize())
 app.use(passport.session())
 
+//method-overide
+app.use(methodOverride('_method'))
+
 
 app.use(flash())
 
@@ -68,9 +72,14 @@ const orderController = require("./http/controllers/customers/orderController");
 const productsController = require("./http/controllers/productsController");
 const authController = require("./http/controllers/authController");
 const AdminOrderController = require("./http/controllers/admin/orderController");
+const statusController = require("./http/controllers/admin/statusController");
+const eubController = require("./http/controllers/eubController")
 
+//middlewares
 const guest = require("../src/http/middlewares/guest")
 const auth = require("../src/http/middlewares/auth")
+const admin = require("../src/http/middlewares/admin");
+const { override } = require('laravel-mix');
 
 const port = process.env.PORT || 3000;
 
@@ -99,14 +108,81 @@ hbs.registerPartials(partials_path);
 app.get("/", homeController().index) 
 app.get("/views/products.ejs", productsController().index)
 
+
+//eub
+
+app.get("/views/eub/edit/:id",  async (req,res) => {
+    const product =  await Product.findById(req.params.id)
+    res.render('edit', { product: product })
+})
+
+
+app.get("/views/eub", async(req,res) => {
+    const products = await Product.find().sort({
+        createdAt: 'desc'
+    })
+    res.render('eub', { products: products })
+})
+
+
+
+app.get("/views/eub/new", (req,res) => {
+    res.render('new', { product: new Product() })
+})
+
+
+app.post('/views/eub/', async (req,res, next) => {
+    req.product = new Product()
+    next()
+}, saveArticleAndRedirect('new'))
+
+
+
+function saveArticleAndRedirect(path) {
+    return async (req, res) => {
+        let product = req.product
+            product.name= req.body.name
+            product.image= req.body.image
+            product.price= req.body.price
+     
+         try {
+             product = await product.save()
+             res.redirect("/views/eub/")
+         } catch(e) {
+             res.render(`${path}`, { product: product })
+             console.log(e);
+         }
+    }
+}
+
+
+
+app.put('/views/eub/edit/:id',  async (req,res, next) => {
+    req.product =  await Product.findById(req.params.id)
+    next()
+}, saveArticleAndRedirect('edit'))
+
+
+app.delete('/eub/:id', async(req,res) => {
+    await Product.findByIdAndDelete(req.params.id)
+    res.redirect('/views/eub')
+})
+
+
+
+
+
+
 //customer routes
 app.get("/views/cart.ejs", cartController().index)
 app.post('/update-cart', cartController().update)
 app.post('/orders', auth, orderController().store)
 app.get('/views/orders.ejs', auth, orderController().index)
 
+
 //admin routes
-app.get('/views/admin/orders.ejs', auth, orderController().index)
+app.get('/admin/orders', admin, AdminOrderController().index)
+// app.post('/admin/order/status', admin, statusController().update)
 
 app.get("/views/login.ejs", guest, authController().login)
 app.post("/login", authController().postLogin)

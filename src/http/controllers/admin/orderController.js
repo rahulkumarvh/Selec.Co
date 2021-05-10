@@ -1,17 +1,13 @@
 const order = require("../../../models/order")
-
 const Order = require('../../../models/order')
+const moment = require('moment')
 
 function orderController() {
     return {
-        index(req, res) {
-           order.find({ status: { $ne: 'completed' } }, null, { sort: { 'createdAt': -1 }}).populate('customerId', '-password').exec((err, orders) => {
-               if(req.xhr) {
-                   return res.json(orders)
-               } else {
-                return res.render('admin/orders')
-               }
-           })
+        async index(req, res) {
+            const orders = await Order.find({ customerId: req.user._id }, null, 
+                { sort: { 'createdAt': -1} } )
+            res.render('admin/orders', { orders: orders, moment: moment })
         }
     }
 }

@@ -5,55 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Orders Admin</title>
+    <title>Orders</title>
     <meta name="keywords" content="tailwind,tailwindcss,tailwind css,css,starter template,free template,store template, shop layout, minimal, monochrome, minimalistic, theme, nordic">
 
-    <link rel="stylesheet" href="">
 
     <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
-    <!--Replace with your tailwind.css once created-->
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="/css/client.css">
     
 
     <style>
-
-        #cartCounter {
-            font-size: 10px;
-        }
-
-        .action {
-        position: fixed;
-    }
-    .action .menu {
-        position: fixed;
-        top: 60px;
-        right: 60px;
-        padding: 10px 20px;
-        background: black;
-        text-align: center;
-        font-size: small;
-        transition: 0.5s;
-        visibility: hidden;
-        opacity: 0;
-    }
-
-    .action .menu::before{
-        content: '';
-        position: absolute;
-        top: -1px;
-        right: 15px;
-        width: 18px;
-        height: 10px;
-        background: black;
-        transform: rotate(45deg);
-    }
-
-    .action .menu.active{
-        visibility: visible;
-        opacity: 1;
-    }
 
         .card{
             position: relative;
@@ -166,10 +128,9 @@
         #carousel-2:checked ~ .control-2 ~ .carousel-indicators li:nth-child(2) .carousel-bullet,
         #carousel-3:checked ~ .control-3 ~ .carousel-indicators li:nth-child(3) .carousel-bullet {
             color: #000;
-            /*Set to match the Tailwind colour you want the active one to be */
         }
     </style>
-
+    
 </head>
 
 <body class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
@@ -207,19 +168,19 @@
 
             <div class="order-2 md:order-3 flex items-center" id="nav-content">
 
-                 <!-- check if logged in  -->
-                 <% if(user) { %> 
-                    <div class="action z-50">
-                        <div class="menu">
-                            <h3 class="text-white"><a href="">User</a></h3>
-                            <form id="logout" action="/logout" method="POST">
-                                <ul>
-                                    <li class="text-white"><a onclick="document.getElementById('logout').submit()" href="#">Logout</a></li>
-                                </ul>
-                            </form>
-                        </div>
+                <!-- check if logged in  -->
+                <% if(user) { %> 
+                <div class="action z-50">
+                    <div class="menu">
+                        <h3 class="text-white"><a href="">User</a></h3>
+                        <form id="logout" action="/logout" method="POST">
+                            <ul>
+                                <li class="text-white"><a onclick="document.getElementById('logout').submit()" href="#">Logout</a></li>
+                            </ul>
+                        </form>
                     </div>
-                    <% } %> 
+                </div>
+                <% } %> 
 
                 <a class="inline-block no-underline hover:text-black" onclick="menuToggle()" href="#">
                     <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -229,34 +190,107 @@
                 </a>
 
                 <div class="flex items-center overflow-hidden">
-                    <a class="pl-3 inline-block no-underline hover:text-black" href="cart.ejs">
+                    <a class="pl-3 inline-block no-underline hover:text-black" href="/views/cart.ejs">
                         <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path d="M21,7H7.462L5.91,3.586C5.748,3.229,5.392,3,5,3H2v2h2.356L9.09,15.414C9.252,15.771,9.608,16,10,16h8 c0.4,0,0.762-0.238,0.919-0.606l3-7c0.133-0.309,0.101-0.663-0.084-0.944C21.649,7.169,21.336,7,21,7z M17.341,14h-6.697L8.371,9 h11.112L17.341,14z" />
                             <circle cx="10.5" cy="18.5" r="1.5" />
                             <circle cx="17.5" cy="18.5" r="1.5" />
                         </svg>
                     </a>
-                        <span class="mb-4 ml-0 rounded-full h-4 w-4 flex items-center justify-center inline-block bg-black rounded-full text-white z-50" id="cartCounter"><%= session.cart ? session.cart.totalQty : '0' %></span>
+                    <span class="mb-4 ml-0 rounded-full h-4 w-4 flex items-center justify-center inline-block bg-black rounded-full text-white z-40" id="cartCounter"><%= session.cart ? session.cart.totalQty : '0' %></span>
                 </div>
+
             </div>
         </div>
     </nav>
 
-    <section class="orders light-section">
-        <div class="container mx-auto pt-12">
-            <h1 class="font-bold text-lg mb-4">All orders</h1>
-            <table class="w-full table-auto bg-white">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 text-left">Orders</th>
-                        <th class="px-4 py-2 text-left">Customer</th>
-                        <th class="px-4 py-2 text-left">Address</th>
-                        <th class="px-4 py-2 text-left">status</th>
-                        <th class="px-4 py-2 text-left">Placed at</th>
-                    </tr>
-                </thead>
-                <tbody id="orderTableBody">
-                </tbody>
-            </table>
-        </div>
-    </section>
+            <section class="orders light-section container mx-auto w-2/3">
+                <div class="container mx-auto pt-12">
+                    <h1 class="font-bold text-lg mb-4 text-black">All orders</h1>
+                    <% if(messages.success) { %> 
+                        <div id="success-alert" class="flex items-center bg-green-500 text-white texxt-sm font-bold px-4 py-3" role="alert">
+                            <svg class="h-5 pr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 209.281 209.281" style="enable-background:new 0 0 209.281 209.281;" xml:space="preserve">
+                                <g>
+                                    <path d="M104.641,72.862c5.812,0,10.541-4.723,10.541-10.528c0-5.826-4.729-10.566-10.541-10.566   c-5.812,0-10.541,4.74-10.541,10.566C94.1,68.139,98.828,72.862,104.641,72.862z"/>
+                                    <path d="M123.349,142.412H112.14v-42.016c0-4.142-3.357-7.5-7.5-7.5H85.933c-4.142,0-7.5,3.358-7.5,7.5c0,4.142,3.358,7.5,7.5,7.5   h11.208v42.016c0,4.142,3.358,7.5,7.5,7.5h18.709c4.143,0,7.5-3.358,7.5-7.5C130.849,145.77,127.492,142.412,123.349,142.412z"/>
+                                    <path d="M104.641,0.001C46.941,0.001,0,46.942,0,104.64s46.941,104.64,104.641,104.64c57.699,0,104.64-46.941,104.64-104.64   S162.339,0.001,104.641,0.001z M104.641,194.28C55.212,194.28,15,154.068,15,104.64s40.212-89.64,89.641-89.64   s89.64,40.212,89.64,89.64S154.069,194.28,104.641,194.28z"/>
+                            </svg>
+                            <p>Order placed Succesfully</p>
+                        </div>
+                    <% } %> 
+                </div>
+                <table class="w-full table-auto bg-white mt-2">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left text-black">Orders</th>
+                            <th class="px-4 py-2 text-left text-black">Email</th>
+                            <th class="px-4 py-2 text-left text-black">Address</th>
+                            <th class="px-4 py-2 text-left text-black">Order Status</th>
+                            <th class="px-4 py-2 text-left text-black">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(orders.length) { %>
+                            <% orders.forEach((order) => { %>
+                                <tr>
+                                    <td class="border px-4 py-2">
+                                        <a class="link" href="/"><%= order._id %></a>
+                                        
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <%= order.email %>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <%= order.address %>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <div class="inline-block relative w-64">
+                                            <form action="/admin/order/status" method="POST">
+                                                <input type="hidden" name="orderId" value= <%= order._id %> >
+                                                <select name="status" onchange="this.form.submit()"
+                                                    class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                                                    <option value="order_placed">
+                                                        Placed</option>
+                                                    <option value="confirmed">
+                                                        Confirmed</option>
+                                                    <option value="prepared">
+                                                        Prepared</option>
+                                                    <option value="delivered">
+                                                        Delivered
+                                                    </option>
+                                                    <option value="completed">
+                                                        Completed
+                                                    </option>
+                                                </select>
+                                            </form>
+                                            <div
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                        <%= moment(order.createdAt).format('hh:mm A') %>
+                                    </td>
+                                </tr>
+                           <% }) %> 
+                        <% } else { %>
+                        <tr>
+                            <td class="p-4">
+                                <span>No orders found!</span>
+                            </td>
+                        </tr>
+                        <% } %> 
+                    </tbody>
+                </table>
+            </section>
+
+    <script src="/js/client.js"></script>
+
+</body>
+
+</html>
