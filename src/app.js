@@ -44,6 +44,9 @@ app.use(session({
    cookie: { maxAge: 1000 * 60 * 60 * 24} // 24 hours
 }))
 
+//shortUrl
+const ShortUrl = require('./models/shortUrl')
+
 //passport config
 const passportInit = require('./config/passport')
 passportInit(passport)
@@ -117,7 +120,7 @@ app.get("/views/eub/edit/:id",  async (req,res) => {
 })
 
 
-app.get("/views/eub", async(req,res) => {
+app.get("/views/eub", admin, async(req,res) => {
     const products = await Product.find().sort({
         createdAt: 'desc'
     })
@@ -125,11 +128,10 @@ app.get("/views/eub", async(req,res) => {
 })
 
 
-
+//new product
 app.get("/views/eub/new", (req,res) => {
     res.render('new', { product: new Product() })
 })
-
 
 app.post('/views/eub/', async (req,res, next) => {
     req.product = new Product()
@@ -169,7 +171,26 @@ app.delete('/eub/:id', async(req,res) => {
 })
 
 
+//custom links
+app.get("/views/eub/link", async (req,res) => {
+    const shortUrls = await ShortUrl.find()
+    res.render('link', { shortUrls: shortUrls })
+})
 
+app.post("/views/eub/link/shortUrls", async (req,res) => {
+    await ShortUrl.create({ full: req.body.fullUrl })
+    res.redirect('/views/eub/link')
+})
+
+app.get('/views/eub/:shortUrl', async (req, res) => {
+    const shortUrl = await ShortUrl.findOne({ short: req.params.shortUrl })
+    if (shortUrl == null) return res.sendStatus(404)
+
+    shortUrl.clicks++
+    shortUrl.save()
+
+    res.redirect(shortUrl.full)
+})
 
 
 

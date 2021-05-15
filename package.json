@@ -29,12 +29,13 @@
     "mongoose": "^5.12.3",
     "noty": "^3.2.0-beta-deprecated",
     "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "laravel-mix": "^6.0.18",
-    "postcss": "^8.1.14",
+    "postcss": "^8.2.15",
     "resolve-url-loader": "^3.1.2",
     "sass": "^1.32.11",
     "sass-loader": "^11.0.1"
