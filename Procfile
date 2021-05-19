@@ -1,1 +1,0 @@
-web: node app.js -e js,hbs,ejs
