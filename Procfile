@@ -1,1 +1,1 @@
-web: node src/app.js -e js,hbs,ejs
+web: node app.js -e js,hbs,ejs
