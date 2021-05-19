@@ -14,9 +14,9 @@ const methodOverride = require('method-override')
 
 //database connection
 
-const url = 'mongodb://localhost/shop';
 
-mongoose.connect(url, {
+
+mongoose.connect(process.env.MONGO_CONNECTION_URL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
