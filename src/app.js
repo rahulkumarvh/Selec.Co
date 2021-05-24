@@ -17,9 +17,6 @@ const methodOverride = require('method-override')
 const url = 'mongodb://localhost/shop';
 
 
-// const MONGO_URL = 'mongodb+srv://rahul:mVAhvOyw5enTcn7b@selec.7pzf6.mongodb.net/shop?retryWrites=true&w=majority'
-
-
 mongoose.connect(process.env.MONGO_CONNECTION_URL || url, {
     useNewUrlParser: true,
     useCreateIndex: true,
