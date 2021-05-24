@@ -16,9 +16,9 @@ const methodOverride = require('method-override')
 
 const url = 'mongodb://localhost/shop';
 
-const mongourl = 'mongodb://myUserAdmin:12345@18.221.96.207:27017/shop?authSource=admin'
+// const mongourl = 'mongodb://myUserAdmin:12345@18.221.96.207:27017/shop?authSource=admin'
 
-mongoose.connect(mongourl || url, {
+mongoose.connect(url, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
