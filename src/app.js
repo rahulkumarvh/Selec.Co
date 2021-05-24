@@ -16,9 +16,11 @@ const methodOverride = require('method-override')
 
 const url = 'mongodb://localhost/shop';
 
-// const mongourl = 'mongodb://myUserAdmin:12345@18.221.96.207:27017/shop?authSource=admin'
 
-mongoose.connect(url, {
+const herokuurl = 'mongodb+srv://rahul:mVAhvOyw5enTcn7b@selec.7pzf6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+
+
+mongoose.connect(herokuurl || url, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
